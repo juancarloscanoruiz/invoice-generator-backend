@@ -7,19 +7,19 @@ import (
 )
 
 type Invoice struct {
-	ID                 int `gorm:"primaryKey;autoIncrement"`
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
+	ID                 int            `gorm:"primaryKey;autoIncrement"`
+	CreatedAt          time.Time      `json:"createdAt"`
+	UpdatedAt          time.Time      `json:"updatedAt"`
 	DeletedAt          gorm.DeletedAt `gorm:"index" json:"deletedAt"`
-	StreetAddress      string         `gorm:"not null"`
-	City               string         `gorm:"not null"`
-	PostCode           string         `gorm:"not null"`
-	Country            string         `gorm:"not null"`
-	Status             string         `gorm:"not null"`
-	IssueDate          time.Time      `gorm:"not null"`
-	PaymentTerms       string         `gorm:"not null"`
-	ProjectDescription string         `gorm:"not null"`
-	Total              float64        `gorm:"not null"`
-	ClientID           int            `gorm:"not null"`
-	Client             Client         `gorm:"foreignKey:ClientID"`
+	StreetAddress      string         `gorm:"not null" json:"streetAddress"`
+	City               string         `gorm:"not null" json:"city"`
+	PostCode           string         `gorm:"not null" json:"postCode"`
+	Country            string         `gorm:"not null" json:"country"`
+	Status             string         `gorm:"not null" json:"status"`
+	IssueDate          time.Time      `gorm:"not null" json:"issueDate"`
+	PaymentTerms       string         `gorm:"not null" json:"paymentTerms"`
+	ProjectDescription string         `gorm:"not null" json:"projectDescription"`
+	Total              float64        `gorm:"not null" json:"total"`
+	ClientID           int            `gorm:"not null" json:"clientId"`
+	Client             Client         `gorm:"foreignKey:ClientID" json:"client"`
 }
