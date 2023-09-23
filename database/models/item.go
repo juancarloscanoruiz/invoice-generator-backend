@@ -7,11 +7,13 @@ import (
 )
 
 type Item struct {
-	ID        uint `gorm:"primaryKey;autoIncrement"`
+	ID        int `gorm:"primaryKey;autoIncrement"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	Name      string         `gorm:"not null"`
-	Quantity  uint           `gorm:"not null"`
+	Quantity  int            `gorm:"not null"`
 	Price     float64        `gorm:"not null"`
+	InvoiceID int            `gorm:"not null"`
+	Invoice   Invoice        `gorm:"foreignKey:InvoiceID"`
 }

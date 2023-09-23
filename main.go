@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	_ "invoice-app/database"
+	"invoice-app/routes"
+	"invoice-app/utils"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,10 +20,11 @@ func init() {
 
 func main() {
 	app := fiber.New()
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-	err := app.Listen(":3000")
+	routes.SetupRoutes(app)
+
+	appPort := utils.GetPort()
+
+	err := app.Listen(fmt.Sprintf(":%s", appPort))
 	if err != nil {
 		fmt.Printf(err.Error())
 	}

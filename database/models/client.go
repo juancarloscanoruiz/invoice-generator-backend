@@ -7,14 +7,14 @@ import (
 )
 
 type Client struct {
-	ID            uint `gorm:"primaryKey;autoIncrement"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     gorm.DeletedAt `gorm:"index"`
-	Name          string         `gorm:"not null"`
-	Email         string         `gorm:"not null"`
-	StreetAddress string         `gorm:"not null"`
-	City          string         `gorm:"not null"`
-	PostCode      string         `gorm:"not null"`
-	Country       string         `gorm:"not null"`
+	ID            int            `gorm:"primaryKey;autoIncrement" json:"id"`
+	CreatedAt     time.Time      `json:"createdAt"`
+	UpdatedAt     time.Time      `json:"updatedAt"`
+	DeletedAt     gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	Name          string         `gorm:"not null" json:"name"`
+	Email         string         `gorm:"not null" json:"email"`
+	StreetAddress string         `gorm:"not null" json:"streetAddress"`
+	City          string         `gorm:"not null" json:"city"`
+	PostCode      string         `gorm:"not null" json:"postCode"`
+	Country       string         `gorm:"not null" json:"country"`
 }
