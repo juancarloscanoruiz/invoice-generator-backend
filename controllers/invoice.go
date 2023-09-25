@@ -22,8 +22,8 @@ func ListInvoices(c *fiber.Ctx) error {
 }
 
 type CreateInvoiceRequest struct {
-	Invoice models.Invoice
-	Items   []models.Item
+	models.Invoice
+	Items []models.Item
 }
 
 func CreateInvoice(c *fiber.Ctx) error {
@@ -31,15 +31,15 @@ func CreateInvoice(c *fiber.Ctx) error {
 	c.BodyParser(&body)
 
 	invoice := models.Invoice{
-		StreetAddress:      body.Invoice.StreetAddress,
-		City:               body.Invoice.City,
-		PostCode:           body.Invoice.PostCode,
-		Country:            body.Invoice.Country,
-		Status:             body.Invoice.Status,
-		IssueDate:          body.Invoice.IssueDate,
-		PaymentTerms:       body.Invoice.PaymentTerms,
-		ProjectDescription: body.Invoice.ProjectDescription,
-		Client:             body.Invoice.Client,
+		StreetAddress:      body.StreetAddress,
+		City:               body.City,
+		PostCode:           body.PostCode,
+		Country:            body.Country,
+		Status:             body.Status,
+		IssueDate:          body.IssueDate,
+		PaymentTerms:       body.PaymentTerms,
+		ProjectDescription: body.ProjectDescription,
+		Client:             body.Client,
 	}
 	var items []models.Item
 
