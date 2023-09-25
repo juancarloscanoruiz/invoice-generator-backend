@@ -10,13 +10,15 @@ import (
 
 func ListInvoices(c *fiber.Ctx) error {
 	var invoices []models.Invoice
-	// if err := database.Db.InnerJoins("clients").Find(&invoices).Error; err != nil {
-	if err := database.Db.Joins("INNER JOIN clients on clients.id = invoices.client_id").Find(&invoices).Error; err != nil {
+
+	if err := database.Db.Preload("Client").Find(&invoices).Error; err != nil {
 		errorMessage := err.Error()
 		return c.JSON(utils.APIResponse{Status: fiber.StatusInternalServerError, Data: nil, Error: &errorMessage})
 	}
+
 	response := utils.APIResponse{Status: fiber.StatusOK, Data: invoices, Error: nil}
 	return c.JSON(response)
+
 }
 
 type CreateInvoiceRequest struct {
