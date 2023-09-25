@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	controllestypes "invoice-app/controllers/types"
 	"invoice-app/database"
 	"invoice-app/database/models"
 	"invoice-app/utils"
@@ -21,13 +22,8 @@ func ListInvoices(c *fiber.Ctx) error {
 
 }
 
-type CreateInvoiceRequest struct {
-	models.Invoice
-	Items []models.Item
-}
-
 func CreateInvoice(c *fiber.Ctx) error {
-	var body CreateInvoiceRequest
+	var body controllestypes.CreateInvoiceRequest
 	c.BodyParser(&body)
 
 	invoice := models.Invoice{
