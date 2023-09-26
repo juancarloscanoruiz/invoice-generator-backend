@@ -1,7 +1,7 @@
 include .env
 
 dev:
-	"$(GOPATH)/bin/air"
+	"$(GOP)/bin/air"
 	
 start:
 	go run .
