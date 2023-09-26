@@ -4,19 +4,19 @@ import (
 	controllestypes "invoice-app/controllers/types"
 	"invoice-app/database"
 	"invoice-app/database/models"
+	"invoice-app/database/repositories"
 	"invoice-app/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func ListInvoices(c *fiber.Ctx) error {
-	var invoices []models.Invoice
 
-	if err := database.Db.Preload("Client").Find(&invoices).Error; err != nil {
+	invoices, err := repositories.GetInvoices()
+	if err != nil {
 		errorMessage := err.Error()
 		return c.JSON(utils.APIResponse{Status: fiber.StatusInternalServerError, Data: nil, Error: &errorMessage})
 	}
-
 	response := utils.APIResponse{Status: fiber.StatusOK, Data: invoices, Error: nil}
 	return c.JSON(response)
 
@@ -24,7 +24,14 @@ func ListInvoices(c *fiber.Ctx) error {
 
 func CreateInvoice(c *fiber.Ctx) error {
 	var body controllestypes.CreateInvoiceRequest
-	c.BodyParser(&body)
+
+	bodyParserErr := c.BodyParser(&body)
+	var errorResponseMessage string
+
+	if bodyParserErr != nil {
+		errorResponseMessage = "Missing required data for creating a new invoice. Please provide the necessary information in the request body."
+		return c.JSON(utils.APIResponse{Status: fiber.StatusBadRequest, Data: nil, Error: &errorResponseMessage})
+	}
 
 	invoice := models.Invoice{
 		StreetAddress:      body.StreetAddress,
@@ -37,13 +44,19 @@ func CreateInvoice(c *fiber.Ctx) error {
 		ProjectDescription: body.ProjectDescription,
 		Client:             body.Client,
 	}
-	var items []models.Item
+	invoiceErr := database.Db.Create(&invoice).Error
 
-	database.Db.Create(&invoice)
+	var items []models.Item
 	for _, item := range body.Items {
 		item.InvoiceID = invoice.ID
 		items = append(items, item)
 	}
-	database.Db.Create(&items)
-	return c.JSON(items)
+
+	itemErr := database.Db.Create(&items).Error
+	if itemErr != nil || invoiceErr != nil {
+		errorResponseMessage = "There was an error creating the invoice."
+		return c.JSON(utils.APIResponse{Status: fiber.StatusInternalServerError, Data: nil, Error: &errorResponseMessage})
+	}
+
+	return c.JSON(utils.APIResponse{Status: fiber.StatusOK, Data: nil, Error: nil})
 }

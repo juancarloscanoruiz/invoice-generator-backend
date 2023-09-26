@@ -22,4 +22,5 @@ type Invoice struct {
 	Total              float64        `gorm:"not null" json:"total"`
 	ClientID           int            `gorm:"not null" json:"clientId"`
 	Client             Client         `gorm:"foreignKey:ClientID" json:"client"`
+	Items              []Item         `gorm:"foreignKey:InvoiceID"`
 }

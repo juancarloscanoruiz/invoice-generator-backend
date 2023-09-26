@@ -15,5 +15,5 @@ type Item struct {
 	Quantity  int            `gorm:"not null" json:"quantity"`
 	Price     float64        `gorm:"not null" json:"price"`
 	InvoiceID int            `gorm:"not null" json:"invoiceId"`
-	Invoice   Invoice        `gorm:"foreignKey:InvoiceID" json:"invoice"`
+	Invoice   Invoice        `gorm:"foreignKey:InvoiceID" json:"-"`
 }
