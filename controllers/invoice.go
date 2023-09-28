@@ -1,8 +1,7 @@
 package controllers
 
 import (
-	controllestypes "invoice-app/controllers/types"
-	"invoice-app/database"
+	controllerstypes "invoice-app/controllers/types"
 	"invoice-app/database/models"
 	"invoice-app/database/repositories"
 	"invoice-app/utils"
@@ -23,7 +22,7 @@ func ListInvoices(c *fiber.Ctx) error {
 }
 
 func CreateInvoice(c *fiber.Ctx) error {
-	var body controllestypes.CreateInvoiceRequest
+	var body controllerstypes.CreateInvoiceRequest
 
 	bodyParserErr := c.BodyParser(&body)
 	var errorResponseMessage string
@@ -43,20 +42,15 @@ func CreateInvoice(c *fiber.Ctx) error {
 		PaymentTerms:       body.PaymentTerms,
 		ProjectDescription: body.ProjectDescription,
 		Client:             body.Client,
-	}
-	invoiceErr := database.Db.Create(&invoice).Error
-
-	var items []models.Item
-	for _, item := range body.Items {
-		item.InvoiceID = invoice.ID
-		items = append(items, item)
+		Items:              body.Items,
 	}
 
-	itemErr := database.Db.Create(&items).Error
-	if itemErr != nil || invoiceErr != nil {
+	createdInvoice, createInvoiceErr := repositories.CreateInvoice(invoice)
+
+	if createInvoiceErr != nil {
 		errorResponseMessage = "There was an error creating the invoice."
 		return c.JSON(utils.APIResponse{Status: fiber.StatusInternalServerError, Data: nil, Error: &errorResponseMessage})
 	}
 
-	return c.JSON(utils.APIResponse{Status: fiber.StatusOK, Data: nil, Error: nil})
+	return c.JSON(utils.APIResponse{Status: fiber.StatusOK, Data: createdInvoice, Error: nil})
 }
