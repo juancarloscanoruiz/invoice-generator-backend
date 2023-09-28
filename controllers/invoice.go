@@ -14,9 +14,12 @@ func ListInvoices(c *fiber.Ctx) error {
 	invoices, err := repositories.GetInvoices()
 	if err != nil {
 		errorMessage := err.Error()
+		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(utils.APIResponse{Status: fiber.StatusInternalServerError, Data: nil, Error: &errorMessage})
 	}
+
 	response := utils.APIResponse{Status: fiber.StatusOK, Data: invoices, Error: nil}
+	c.Status(fiber.StatusOK)
 	return c.JSON(response)
 
 }
@@ -28,6 +31,7 @@ func CreateInvoice(c *fiber.Ctx) error {
 	var errorResponseMessage string
 
 	if bodyParserErr != nil {
+		c.Status(fiber.StatusBadRequest)
 		errorResponseMessage = "Missing required data for creating a new invoice. Please provide the necessary information in the request body."
 		return c.JSON(utils.APIResponse{Status: fiber.StatusBadRequest, Data: nil, Error: &errorResponseMessage})
 	}
@@ -49,8 +53,9 @@ func CreateInvoice(c *fiber.Ctx) error {
 
 	if createInvoiceErr != nil {
 		errorResponseMessage = "There was an error creating the invoice."
+		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(utils.APIResponse{Status: fiber.StatusInternalServerError, Data: nil, Error: &errorResponseMessage})
 	}
-
+	c.Status(fiber.StatusOK)
 	return c.JSON(utils.APIResponse{Status: fiber.StatusOK, Data: createdInvoice, Error: nil})
 }
