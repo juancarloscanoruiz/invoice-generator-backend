@@ -1,9 +1,10 @@
 package repositories
 
 import (
-	"fmt"
 	"invoice-app/database"
 	"invoice-app/database/models"
+
+	"gorm.io/gorm/clause"
 )
 
 func GetInvoices() ([]models.Invoice, error) {
@@ -27,7 +28,6 @@ func GetInvoice(id int) (*models.Invoice, error) {
 }
 
 func CreateInvoice(invoice models.Invoice) (*models.Invoice, error) {
-	fmt.Print(invoice.Items)
 	newInvoice := models.Invoice{
 		StreetAddress:      invoice.StreetAddress,
 		City:               invoice.City,
@@ -58,4 +58,13 @@ func CreateInvoice(invoice models.Invoice) (*models.Invoice, error) {
 	}
 	newInvoice.Items = newItems
 	return &newInvoice, nil
+}
+
+func DeleteInvoice(invoiceId int) (*models.Invoice, error) {
+	var invoice models.Invoice
+	deleteErr := database.Db.Clauses(clause.Returning{}).Where("id = ?", invoiceId).Delete(&invoice).Error
+	if deleteErr != nil {
+		return nil, deleteErr
+	}
+	return &invoice, nil
 }

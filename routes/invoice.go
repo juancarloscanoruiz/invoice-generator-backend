@@ -7,6 +7,7 @@ import (
 )
 
 func SetupInvoceRoutes(app *fiber.App) {
-	app.Get("/invoice", controllers.ListInvoices)
+	app.Get("/invoice/:id", controllers.ListInvoices)
 	app.Post("/invoice", controllers.CreateInvoice)
+	app.Delete("/invoice/:id", controllers.CreateInvoice)
 }

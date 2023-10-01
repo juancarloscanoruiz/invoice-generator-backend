@@ -59,3 +59,14 @@ func CreateInvoice(c *fiber.Ctx) error {
 	c.Status(fiber.StatusOK)
 	return c.JSON(utils.APIResponse{Status: fiber.StatusOK, Data: createdInvoice, Error: nil})
 }
+
+func DeleteInvoice(c *fiber.Ctx) {
+	/*
+		 	invoiceId, err := strconv.Atoi(c.Params("id"))
+			if err != nil {
+				c.Status(fiber.StatusBadRequest)
+
+			}
+			repositories.DeleteInvoice()
+	*/
+}
